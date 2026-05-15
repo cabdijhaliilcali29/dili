@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HALDOOR Luxury Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* MIDABADA CUSUB (Modern Luxury Palette) */
+      --bg-main: #f8fafc;
+      --sidebar-grad: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      --btn-grad: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);
+      --white: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --danger: #ef4444;
+      --success: #10b981;
+      --warning: #f59e0b;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg-main);
+      display: flex;
+      color: var(--text-main);
+    }
+
+    .sidebar {
+      width: 260px;
+      background: var(--sidebar-grad);
+      height: 100vh;
+      position: fixed;
+      padding: 30px;
+      color: white;
+      z-index: 100;
+      box-shadow: 4px 0 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 50px;
+      text-align: center;
+      background: linear-gradient(to right, #fff, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+    }
+
+    .nav-item {
+      padding: 14px 20px;
+      cursor: pointer;
+      border-radius: 15px;
+      margin-bottom: 8px;
+      color: rgba(255, 255, 255, 0.6);
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .nav-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+      transform: translateX(5px);
+    }
+
+    .nav-item.active {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-weight: 700;
+      border-left: 4px solid #3b82f6;
+    }
+
+    .main {
+      margin-left: 320px;
+      flex: 1;
+      padding: 40px;
+      min-height: 100vh;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: 24px;
+      padding: 35px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+      border: 1px solid #e2e8f0;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 35px;
+    }
+
+    .btn-add {
+      background: var(--btn-grad);
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .btn-add:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      text-align: left;
+      padding: 18px;
+      color: var(--text-muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      border-bottom: 2px solid #f1f5f9;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      padding: 18px;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 14px;
+    }
+
+    .status-pill {
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 10px;
+      display: inline-block;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.4);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-content {
+      background: white;
+      padding: 40px;
+      border-radius: 24px;
+      width: 450px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-content input {
+      width: 100%;
+      padding: 14px;
+      margin: 10px 0;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      box-sizing: border-box;
+    }
+
+    .action-btn {
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-weight: 700;
+      margin-right: 12px;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="sidebar">
+    <div class="logo">HALDOOR</div>
+    <div class="nav-item active" onclick="changeTab('Users', this)">Users</div>
+    <div class="nav-item" onclick="changeTab('Customers', this)">Customers</div>
+    <div class="nav-item" onclick="changeTab('Roles', this)">Roles</div>
+    <div class="nav-item" onclick="changeTab('Menu', this)">Menu</div>
+    <div class="nav-item" onclick="changeTab('Orders', this)">Orders</div>
+    <div class="nav-item" onclick="changeTab('Order_Status', this)">Order Status</div>
+    <div class="nav-item" onclick="changeTab('Notifications', this)">Notifications</div>
+  </div>
+
+  <div class="main">
+    <div class="card">
+      <div class="card-header">
+        <h2 id="tab-title">Users</h2>
+        <button class="btn-add" onclick="openModal()">+ Add New</button>
+      </div>
+      <table>
+        <thead id="thead"></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="modal" id="dataModal">
+    <div class="modal-content">
+      <h3 id="modalTitle">Entry</h3>
+      <div id="modalInputs"></div>
+      <div style="display:flex; justify-content:flex-end; gap:15px; margin-top:25px;">
+        <button onclick="closeModal()"
+          style="border:none; cursor:pointer; background:none; color:var(--text-muted); font-weight: 600;">Close</button>
+        <button class="btn-add" onclick="saveData()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // DATA-DII OO MAGACYADA LAGA BADALAY
+    let db = {
+      Users: [
+        { id: 1, name: "Farxaan Cali", email: "farxaan@haldoor.com", role: "Admin", status: "Active" },
+        { id: 2, name: "Samira Ismaaciil", email: "samira@haldoor.com", role: "Manager", status: "Active" },
+        { id: 3, name: "Maxamed Nuur", email: "maxamed@mail.com", role: "Staff", status: "Inactive" },
+        { id: 4, name: "Yoonis Cumar", email: "yoonis@mail.com", role: "Staff", status: "Active" },
+        { id: 5, name: "Ibraahim Jaamac", email: "ibraahim@mail.com", role: "Customer", status: "Active" },
+        { id: 6, name: "Xamdi Axmed", email: "xamdi@mail.com", role: "Staff", status: "Active" },
+        { id: 7, name: "Cabdiweli Barre", email: "cabdiweli@mail.com", role: "Manager", status: "Inactive" },
+        { id: 8, name: "Zakarie Saciid", email: "zakarie@mail.com", role: "Customer", status: "Active" },
+        { id: 9, name: "Aamina Geedi", email: "aamina@mail.com", role: "Staff", status: "Active" },
+        { id: 10, name: "Cumar Faysal", email: "cumar@mail.com", role: "Customer", status: "Active" }
+      ],
+      Customers: [
+        { id: 1, name: "Mustafe Cilmi", phone: "0906278975", address: "Galdogob", status: "Active" },
+        { id: 2, name: "Fadumo Cusman", phone: "0906789345", address: "Galdogob", status: "Active" },
+        { id: 3, name: "Xasan Maxamuud", phone: "0906453523", address: "Galkacyo", status: "Inactive" },
+        { id: 4, name: "Nimco Yaasiin", phone: "0906912874", address: "Galdogob", status: "Active" },
+        { id: 5, name: "Khadar Dheere", phone: "0906667324", address: "Galkacyo", status: "Active" },
+        { id: 6, name: "Nasteexo Warsame", phone: "0906709800", address: "Galdogob", status: "Inactive" },
+        { id: 7, name: "Khaalid Yuusuf", phone: "0906115736", address: "Galdogob", status: "Active" },
+        { id: 8, name: "Safiya Cumar", phone: "0906903415", address: "Galdogob", status: "Active" },
+        { id: 9, name: "Sharmaarke Cali", phone: "0906454836", address: "Galkacyo", status: "Inactive" },
+        { id: 10, name: "Yasmin Maxamed", phone: "0906345765", address: "Galdogob", status: "Active" }
+      ],
+      Roles: [
+        { id: 1, role: "Admin", desc: "Full System Control", status: "Active" },
+        { id: 2, role: "Manager", desc: "Team & Stock Management", status: "Active" },
+        { id: 3, role: "Staff", desc: "Processing Orders", status: "Active" },
+        { id: 4, role: "Accountant", desc: "Financial Records", status: "Active" },
+        { id: 5, role: "Customer", desc: "User Level Access", status: "Active" },
+        { id: 6, role: "Guest", desc: "Limited Visibility", status: "Inactive" },
+        { id: 7, role: "Delivery", desc: "Logistics Tracking", status: "Active" },
+        { id: 8, role: "Support", desc: "Customer Help", status: "Active" },
+        { id: 9, role: "Marketing", desc: "Promotion Control", status: "Inactive" },
+        { id: 10, role: "Security", desc: "Audit Logs", status: "Active" }
+      ],
+      Menu: [
+        { id: 1, item: "Burger Special", price: "2.5 USD", stock: "Available" },
+        { id: 2, item: "Pizza Family", price: "10 USD", stock: "Unavailable" },
+        { id: 3, item: "Shuwarma Duo", price: "1.5 USD", stock: "Available" },
+        { id: 4, item: "Rice & Meat", price: "4 USD", stock: "Available" },
+        { id: 5, item: "Mango Juice", price: "1.2 USD", stock: "Unavailable" },
+        { id: 6, item: "Pasta Carbonara", price: "3.5 USD", stock: "Available" },
+        { id: 7, item: "Chicken Grill", price: "5 USD", stock: "Available" },
+        { id: 8, item: "Somali Tea", price: "0.5 USD", stock: "Available" },
+        { id: 9, item: "Ice Cream", price: "2 USD", stock: "Unavailable" },
+        { id: 10, item: "Club Sandwich", price: "2.8 USD", stock: "Available" }
+      ],
+      Orders: [
+        { id: 1, order_no: "1", customer: "Ibraahim", item: "Rice & Meat", total: "4 USD" },
+        { id: 2, order_no: "2", customer: "Fadumo", item: "Pizza Family", total: "10 USD" },
+        { id: 3, order_no: "3", customer: "Zakarie", item: "Burger Special", total: "2.5 USD" },
+        { id: 4, order_no: "4", customer: "Xamdi", item: "Pasta Carbonara", total: "3.5 USD" },
+        { id: 5, order_no: "5", customer: "Sharmaarke", item: "Shuwarma Duo", total: "1.5 USD" },
+        { id: 6, order_no: "6", customer: "Cumar", item: "Mango Juice", total: "1.2 USD" },
+        { id: 7, order_no: "7", customer: "Safiya", item: "Somali Tea", total: "0.5 USD" },
+        { id: 8, order_no: "8", customer: "Maxamed", item: "Chicken Grill", total: "5 USD" },
+        { id: 9, order_no: "9", customer: "Yasmin", item: "Ice Cream", total: "2 USD" },
+        { id: 10, order_no: "10", customer: "Khadar", item: "Club Sandwich", total: "2.8 USD" }
+      ],
+      Order_Status: [
+        { id: 1, order_id: "1", status: "Completed", update: "10:30 AM" },
+        { id: 2, order_id: "2", status: "Pending", update: "11:15 AM" },
+        { id: 3, order_id: "3", status: "Cancelled", update: "12:00 PM" },
+        { id: 4, order_id: "4", status: "Completed", update: "01:45 PM" },
+        { id: 5, order_id: "5", status: "Pending", update: "02:30 PM" },
+        { id: 6, order_id: "6", status: "Completed", update: "03:10 PM" },
+        { id: 7, order_id: "7", status: "Completed", update: "04:00 PM" },
+        { id: 8, order_id: "8", status: "Pending", update: "04:30 PM" },
+        { id: 9, order_id: "9", status: "Cancelled", update: "05:00 PM" },
+        { id: 10, order_id: "10", status: "Completed", update: "05:45 PM" }
+      ],
+      Notifications: [
+        { id: 1, title: "Order #1 Ready", type: "Info", date: "16:30" },
+        { id: 2, title: "Stock Alert: Pizza", type: "Warning", date: "16:20" },
+        { id: 3, title: "System Restarting", type: "Urgent", date: "16:00" },
+        { id: 4, title: "New Customer Joined", type: "Info", date: "15:45" },
+        { id: 5, title: "Payment Failed #9", type: "Urgent", date: "15:30" },
+        { id: 6, title: "Menu Updated", type: "Info", date: "15:00" },
+        { id: 7, title: "Staff Shift Over", type: "Warning", date: "14:45" },
+        { id: 8, title: "Database Backup", type: "Info", date: "14:30" },
+        { id: 9, title: "Low Sugar Stock", type: "Warning", date: "14:00" },
+        { id: 10, title: "Security Alert", type: "Urgent", date: "13:45" }
+      ]
+    };
+
+    let currentTab = 'Users';
+    let editId = null;
+
+    function render() {
+      const data = db[currentTab];
+      const head = document.getElementById('thead');
+      const body = document.getElementById('tbody');
+      if (!data || data.length === 0) return;
+      const keys = Object.keys(data[0]).filter(k => k !== 'id');
+
+      head.innerHTML = `<tr>${keys.map(k => `<th>${k}</th>`).join('')} <th>Actions</th></tr>`;
+      body.innerHTML = data.map(row => `
+                <tr>
+                    ${keys.map(k => {
+        let val = row[k];
+        if (['status', 'stock', 'type'].includes(k)) {
+          let style = 'background:#e6f4ea; color:#137333';
+          if (['Unactive', 'Unavailable', 'Cancelled', 'Urgent'].includes(val)) style = 'background:#fce8e6; color:#c5221f';
+          if (['Pending', 'Warning'].includes(val)) style = 'background:#ffe1b9; color:#b06000';
+          if (val === 'Info') style = 'background:#e8f0fe; color:#1a73e8';
+          return `<td><span class="status-pill" style="${style}">${val}</span></td>`;
+        }
+        return `<td>${val}</td>`;
+      }).join('')}
+                    <td>
+                        <button class="action-btn" style="color:#2563eb" onclick="editRow(${row.id})">Edit</button>
+                        <button class="action-btn" style="color:var(--danger)" onclick="deleteRow(${row.id})">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+    }
+
+    function changeTab(tab, el) {
+      currentTab = tab;
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('tab-title').innerText = tab.replace('_', ' ');
+      render();
+    }
+
+    function openModal(id = null) {
+      editId = id;
+      const modal = document.getElementById('dataModal');
+      const inputsDiv = document.getElementById('modalInputs');
+      const item = id ? db[currentTab].find(i => i.id === id) : {};
+      const keys = Object.keys(db[currentTab][0]).filter(k => k !== 'id');
+
+      inputsDiv.innerHTML = keys.map(k => `
+                <label style="font-size:12px; font-weight:bold; color:var(--text-muted); display:block; margin-top:10px">${k.toUpperCase()}</label>
+                <input type="text" id="input-${k}" value="${item[k] || ''}">
+            `).join('');
+      modal.style.display = 'flex';
+    }
+
+    function saveData() {
+      const keys = Object.keys(db[currentTab][0]).filter(k => k !== 'id');
+      const newData = { id: editId || Date.now() };
+      keys.forEach(k => newData[k] = document.getElementById(`input-${k}`).value);
+      if (editId) {
+        const idx = db[currentTab].findIndex(i => i.id === editId);
+        db[currentTab][idx] = newData;
+      } else { db[currentTab].push(newData); }
+      closeModal();
+      render();
+    }
+
+    function deleteRow(id) { if (confirm("Are you sure ?")) { db[currentTab] = db[currentTab].filter(i => i.id !== id); render(); } }
+    function editRow(id) { openModal(id); }
+    function closeModal() { document.getElementById('dataModal').style.display = 'none'; }
+    window.onload = render;
+  </script>
+</body>
+
+</html>
